@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ez="http://java.sun.com/jsf/composite/ezcomp">
+<h:head>
+
+
+	<title>AD Template</title>
+
+	<!-- Bootstrap Core CSS -->
+	<link href="PROJECT-TEMPLATE/css/bootstrap.min.css" rel="stylesheet" />
+	<!-- MetisMenu CSS -->
+	<!-- <link href="PROJECT-TEMPLATE/css/metisMenu.min.css" rel="stylesheet"> -->
+
+	<!-- Timeline CSS -->
+	<link href="PROJECT-TEMPLATE/css/timeline.css" rel="stylesheet" />
+
+	<!-- Custom CSS -->
+	<link href="PROJECT-TEMPLATE/css/startmin.css" rel="stylesheet" />
+
+	<!-- Morris Charts CSS -->
+	<!--  <link href="PROJECT-TEMPLATE/css/morris.css" rel="stylesheet"> -->
+
+	<!-- Custom Fonts -->
+	<link href="PROJECT-TEMPLATE/css/font-awesome.min.css" rel="stylesheet"
+		type="text/css" />
+
+	<!-- Custom CSS -->
+	<link href="CUSTOM/CSS/personal-page.css" rel="stylesheet"
+		type="text/css" />
+</h:head>
+<h:body>
+	<div id="urlDivMaster" class="row" style="display:none">
+		<input type="text" placeholder="Enter Label"/>
+		<input type="text" placeholder="Enter Url"/>
+		<select>
+			<option label="Select Method" value="" selected="selected" disabled="disabled"></option>
+			<option label="GET" value="GET"></option>
+			<option label="PUT" value="PUT"></option>
+			<option label="POST" value="POST"></option>
+			<option label="DELETE" value="DELETE" ></option>
+		</select>
+		
+	</div>
+		
+	<div id="headerDivMaster" style="display:none">
+	<input type="text" placeholder="Header Name"/>
+		<input type="text" placeholder="Header Value"/>
+	</div>
+	<div id="divMaster"></div>
+	<span id="message"></span>
+	<div>
+	<center>
+	<button type="button" id="btnSubmit">Submit</button>
+	<button type="button" id="btnReset">Reset</button>
+	</center>
+	<span id="inputData"></span>
+	</div>
+	<!-- Footer -->
+	<!-- jQuery -->
+	<script src="PROJECT-TEMPLATE/js/jquery.min.js"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<script src="PROJECT-TEMPLATE/js/bootstrap.min.js"></script>
+
+	<!-- openList Menu Plugin JavaScript -->
+	<script src="PROJECT-TEMPLATE/js/metisMenu.min.js"></script>
+	<script>
+	var urlCount=1;
+	var urlId="divUrl_";
+	var headerCount=1;
+	var headerId="divHeader_";
+	
+	function addUrl(){
+		$("#divMaster").append($("#urlDivMaster").clone());
+		$("#divMaster").find("#urlDivMaster").attr("id",urlId+(urlCount));
+		var addHeaderBtn='<button class="addHeader" onclick="addHeader('+urlId+(urlCount)+');">Add Header</button>'
+		console.log(addHeaderBtn)
+		console.log(urlId+(urlCount))
+		$("#"+urlId+(urlCount)).append(addHeaderBtn);
+		var removeUrlBtn='<button class="removeUrl" onclick="removeUrl('+urlId+(urlCount)+');">Close</button>'
+		console.log(removeUrlBtn)
+		console.log(urlId+(urlCount))
+		$("#"+urlId+(urlCount)).append(removeUrlBtn);
+		$("#"+urlId+(urlCount)).css("display","block");
+		urlCount++;
+	};
+	function removeUrl(id){
+		console.log(id)
+		$(id).remove();
+	};
+	function addHeader(id){
+		$(id).append($("#headerDivMaster").clone());
+		$(id).find("#headerDivMaster").attr('id',$(id).attr('id')+"_"+headerId+(headerCount));
+		var divId=$(id).attr('id')+"_"+headerId+(headerCount);
+		console.log(divId)
+		var removeHeader='<button class="removeHeader" onclick="removeHeader('+divId+');">Close</button>';
+		console.log(removeHeader)
+		$("#"+divId).append(removeHeader);
+		$("#"+divId).css("display","block");
+		headerCount++;
+	}
+	function removeHeader(id){
+		console.log(id)
+		$(id).remove();
+	}
+	$(document).ready(function(){
+		console.log("Hi")
+		
+		$("#divMaster").append($("#urlDivMaster").clone());
+		$("#divMaster").find("#urlDivMaster").attr("id",urlId+(urlCount));
+		var addHeaderBtn='<button class="addHeader" onclick="addHeader('+urlId+(urlCount)+');">Add Header</button>'
+			console.log(addHeaderBtn)
+			console.log(urlId+(urlCount))
+			$("#"+urlId+(urlCount)).append(addHeaderBtn);
+		var addUrlBtn='<button class="removeUrl" onclick="addUrl();">Plus</button>'
+		console.log(addUrlBtn)
+		console.log(urlId+(urlCount))
+		$("#"+urlId+(urlCount)).append(addUrlBtn);
+		$("#"+urlId+(urlCount)).css("display","block");
+		urlCount++;
+		});
+	
+		$("#btnSubmit").click(function(){
+			console.log("submit")
+			//data collection  validation
+			var invalid=false;
+			var data="{";
+			var count=1;
+			for(var i=1; i&lt;urlCount; i++){
+				data +=i+":{";
+				//find all url input
+				$("#"+urlId+i).find("input").each(function(){
+					if($(this).parent().attr('id')===urlId+i){
+						if($(this).val()===""){
+							$("#message").text("Please enter both label and url");
+							invalid=true;
+							return;
+						}else{
+							data +="'DATA_"+(count++)+"':'"+$(this).val()+"',";
+						}
+					}
+				});
+				//find select
+				$("#"+urlId+i).find("select").each(function(){
+					if($(this).val()===""){
+						$("#message").text("Please Select valid methos name");
+						invalid=true;
+						return;
+					}else{
+						data +="'DATA_"+(count++)+"':'"+$(this).val()+"',";
+					}
+				});
+				var dataHeader ="'Headers':{";
+				var count1=1;
+					//find all header
+				$("#"+urlId+i).find("div").each(function(){
+					//find all header input
+					$(this).find("input").each(function(){
+						if($(this).val()===""){
+							$("#message").text("Please enter both header name and value");
+							invalid=true;
+							return;
+						}else{
+							dataHeader +="'Header_"+(count1++)+"':'"+$(this).val()+"',";
+						}
+					});
+				});
+			    if(dataHeader !=="'Headers':{"){
+			    	dataHeader = dataHeader.substring(0,dataHeader.length-1);
+			    	dataHeader +="}";
+			    	data +=dataHeader;
+			    }else{
+			    	data = data.substring(0,data.length-1);
+			    }
+				
+				if(i==(urlCount-1)){
+					data +="}";
+				}else{
+					data +="},";
+				}
+			}
+			data +="}";
+			
+			console.log(data)
+			//reset
+			if(!invalid){
+			$("#divMaster").empty();
+			urlCount=1;
+			headerCount=1;
+			$("#message").text("");
+			$("#inputData").text(data);
+			}else{
+				$("#inputData").text("");
+			}
+		});
+		$("#btnReset").click(function(){
+			console.log("reset")
+			$("#message").text("");
+			$("#divMaster").empty();
+			urlCount=1;
+			headerCount=1;
+			$("#divMaster").append($("#urlDivMaster").clone());
+			$("#divMaster").find("#urlDivMaster").attr("id",urlId+(urlCount));
+			var addHeaderBtn='<button class="addHeader" onclick="addHeader('+urlId+(urlCount)+');">Add Header</button>'
+				console.log(addHeaderBtn)
+				console.log(urlId+(urlCount))
+				$("#"+urlId+(urlCount)).append(addHeaderBtn);
+			var addUrlBtn='<button class="removeUrl" onclick="addUrl();">Plus</button>'
+			console.log(addUrlBtn)
+			console.log(urlId+(urlCount))
+			$("#"+urlId+(urlCount)).append(addUrlBtn);
+			$("#"+urlId+(urlCount)).css("display","block");
+			urlCount++;
+		});
+	</script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="PROJECT-TEMPLATE/js/startmin.js"></script>
+</h:body>
+</html>
