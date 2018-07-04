@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<button id='btnSubmit'>Submit</button>
+<script src="https://smtpjs.com/v2/smtp.js">
+</script>
+<script>
+$("#btnSubmit").click(function(){
+console.log("call btnSubmit")
+Email.send(
+    "tester560066@gmail.com",
+    "arka.das@aot.edu.in",
+    "I AM Subject",
+    "I AM Body",
+    "smtp.gmail.com",
+    "tester560066@gmail.com",
+    "project23",
+    function done(message) { alert(message) }    
+);
+});
+</script>
+</body>
+</html>

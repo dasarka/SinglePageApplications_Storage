@@ -1,0 +1,32 @@
+/*******************DOCUMENTATION******************/
+TOPIC: TRIGGER MAIL FRON JS
+**************************************
+
+When you try to send mail from code and you find the error "The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.5.1 Authentication Required", than the error might occur due to following cases.
+
+case 1: when the password is wrong
+
+case 2: when you try to login from some App
+
+case 3: when you try to login from the domain other than your time zone/domain/computer (This is the case in most of scenarios when sending mail from code)
+
+There is a solution for each
+
+solution for case 1: Enter the correct password.
+
+solution 1 for case 2: go to security settings at the followig link https://www.google.com/settings/security/lesssecureapps and enable less secure apps . So that you will be able to login from all apps.
+
+solution 2 for case 2:(see https://stackoverflow.com/a/9572958/52277) enable two-factor authentication (aka two-step verification) , and then generate an application-specific password. Use that newly generated password to authenticate via SMTP.
+
+solution 1 for case 3: (This might be helpful) you need to review the activity. but reviewing the activity will not be helpful due to latest security standards the link will not be useful. So try the below case.
+
+solution 2 for case 3: If you have hosted your code somewhere on production server and if you have access to the production server, than take remote desktop connection to the production server and try to login once from the browser of the production server. This will add excpetioon for login to google and you will be allowed to login from code.
+
+But what if you don't have access to the production server. try the solution 3
+
+solution 3 for case 3: You have to enable login from other timezone / ip for your google account.
+
+to do this follow the link https://g.co/allowaccess and allow access by clicking the continue button.
+
+And that's it. Here you go. Now you will be able to login from any of the computer and by any means of app to your google account.
+
