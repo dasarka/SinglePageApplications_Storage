@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+	 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+	var ConvertMS_T=function(duration){
+		 var milliseconds = parseInt((duration%1000)/100)
+	        , seconds = parseInt((duration/1000)%60)
+	        , minutes = parseInt((duration/(1000*60))%60)
+	        , hours = parseInt((duration/(1000*60*60))%24);
+
+	    hours = (hours < 10) ? "0" + hours : hours;
+	    minutes = (minutes < 10) ? "0" + minutes : minutes;
+	    seconds = (seconds < 10) ? "0" + seconds : seconds;
+	    console.log(hours)
+	    console.log(minutes)
+	    
+	    console.log(seconds)
+	     console.log(milliseconds)
+	
+	//var date = new Date(duration);
+
+	//var time=date.toString("hh:mm:ss:SSS"); 
+	// "Dec 20"
+
+	return  hours + ":" + minutes + ":" + seconds + ":" + milliseconds;
+	}
+	
+	
+	var tooltip={type: 'string', role: 'tooltip'};
+	/* var duration="2372439683000"
+	
+	var time = ConvertMS_T(duration)
+	console.log(time) */
+	
+    var graphData=[
+   	 ['XVALUES', 'Donuts eaten','Donuts ordered','Donuts gifted'],
+        ['0172439683000' , '5','A1','10','B1','3','C1'],
+        ['0572439683000', '7','A2','9','B2','1','C2'],
+        ['1072439683000', '3','A3','5','B3','1','C3'],
+        ['1572439683000', '2','A4','20','B4','10','C4'],
+        ['2072439683000', '6','A5','7','B5','0','C5'],
+        ['2572439683000', '1','A6','1','B6','0','C6'],
+        ['3072439683000', '8','A7','8','B7','0','C7']
+   ];
+	console.log("eStart")
+	 console.log(graphData)
+	for(var j in graphData){
+		if(parseInt(j)===0){console.log(graphData[j])
+			for(var k in graphData[j]){console.log(graphData[j][k])
+				graphData[j][k]="" +graphData[j][k]
+			console.log(graphData[j][k])
+			}
+		}else{
+			for(var k in graphData[j]){
+				if(parseInt(k)===0){
+					graphData[j][k]=""+ConvertMS_T(parseInt(graphData[j][k]))
+				}else if(parseInt(k)%2!==0){
+					graphData[j][k]=parseInt(graphData[j][k])
+				}else{
+					graphData[j][k]=""+graphData[j][k]
+				}
+				
+				
+			}
+		}
+		
+		
+	}
+	  
+	tempData=graphData
+	console.log("Start")
+	 console.log("graphData")
+	 console.log(graphData)
+	 console.log("tempData")
+	  console.log(tempData)
+	  
+	  var firstRow=[];
+	  
+
+    
+	 var filterData = graphData[0];
+	  console.log(filterData)
+
+	  for (var i in filterData){
+		  if(filterData[i]==="XVALUES"){
+			  firstRow.push(filterData[i])
+		  }
+		  else{
+			  firstRow.push(filterData[i])
+			  firstRow.push(tooltip)
+		  }
+	  }
+	  console.log("firstRow")
+	  console.log(firstRow)
+	  graphData[0]=firstRow
+	  console.log("graphData:uppdated")
+	  console.log(graphData)
+   console.log($("#filter_div").html())
+   var tempData=graphData;
+   filterData=tempData[0];
+   
+   	
+   google.charts.load("current", {packages:["corechart"]});
+   google.charts.setOnLoadCallback(drawChart);
+    
+    
+    $(document).ready(function(){
+  	  
+  	 
+   	var sel = $("<select/>");
+	  sel.attr("mulitple","mulitple")
+	  sel.attr("id","selectId")
+	  sel.css("overflow","scroll")
+	  //sel.css("height","100%")
+	  $("<option />", {value: "SelectAll", text: "Select All"}).appendTo(sel);
+	  for(var val in filterData) {
+	      if(val%2!==0){
+		  	$("<option />", {value: filterData[val], text: filterData[val]}).appendTo(sel);
+	      }
+	  }
+	  sel.appendTo("#filter_div");
+	  
+	  $("#selectId").change(function(){
+		 var selectedVal=  $("#selectId").val();
+		 console.log("selectedVal "+selectedVal)
+		 
+		 var newTempData=[];
+		 var newData=[];
+		 var columnNo;
+		 var tooltipColNo;
+		 if(selectedVal !=="SelectAll"){
+			 for(var index in filterData){
+				 if(filterData[index]==selectedVal){
+					 columnNo=index;
+					 tooltipColNo=parseInt(index)+1;
+				 }
+			 }
+			 
+			 console.log(columnNo)
+			console.log(tooltipColNo)
+			 for(var index1 in graphData){
+				 if(index > 0){
+					 for(var index2 in graphData[index1]){
+						 if(index2 !== columnNo && parseInt(index2) !==tooltipColNo){
+							 console.log(index2)
+							 newData.push(graphData[index1][index2])
+						 }
+					 }
+					 
+					 newTempData.push(newData);
+		    		 newData=[];
+				 }
+			 }
+			 console.log(newTempData)
+			 tempData=newTempData;
+			 console.log(tempData)
+		 }else{
+			 tempData=graphData;
+		 }
+		 google.charts.setOnLoadCallback(drawChart);
+	  });
+    });
+    
+    
+
+    
+
+
+      // Callback that creates and populates a data table,
+      // instantiates a dashboard, a range slider and a pie chart,
+      // passes in the data and draws it.
+      function drawChart() {
+    	  console.log("Inside drawChart")
+
+         console.log(tempData)
+    	  
+    	  var data = google.visualization.arrayToDataTable(
+    		  tempData
+            );
+    	  
+    	  var options = {
+    	          tooltip: {isHtml: true},
+    	          legend: 'none'
+    	        };
+        // Create our data table.
+    	  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+          chart.draw(data, {width: 800, height: 400, min: 0},options);
+      }
+    </script>
+</head>
+
+<body>
+	<!--Div that will hold the dashboard-->
+	<div class="row">
+		<!--Divs that will hold each control and chart-->
+
+		<div id="chart_div" class="col-lg-9"></div>
+		<div id="filter_div" class="pull-right col-lg-3"></div>
+	</div>
+</body>
+</html>
